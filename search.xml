@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>什么是循环依赖?Spring是如何解决循环依赖的?</title>
+      <link href="/posts/dfc12e7c.html"/>
+      <url>/posts/dfc12e7c.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="什么是循环依赖"><a href="#什么是循环依赖" class="headerlink" title="什么是循环依赖"></a>什么是循环依赖</h2><p>BeanA中需要注入BeanB，BeanB中需要注入BeanA，从而造成了循环依赖。</p><h2 id="什么情况下循环依赖可以被解决？"><a href="#什么情况下循环依赖可以被解决？" class="headerlink" title="什么情况下循环依赖可以被解决？"></a>什么情况下循环依赖可以被解决？</h2><ol><li>出现循环依赖的Bean必须是单例。</li><li>依赖注入的方式不能全部都是构造器注入。</li></ol><h2 id="Spring是如何解决循环依赖的？"><a href="#Spring是如何解决循环依赖的？" class="headerlink" title="Spring是如何解决循环依赖的？"></a>Spring是如何解决循环依赖的？</h2><p>Spring为了解决循环依赖设计了三级缓存：</p><ul><li>一级缓存：存放<strong>完全初始化好</strong>的Bean。</li><li>二级缓存：存放实例化但还<strong>没进行依赖注入</strong>的Bean。</li><li>三级缓存：存放ObjectFactory对象。</li></ul><p>假设A依赖B，B依赖A，Spring创建A实例过程如下：</p><ol><li>BeanA执行<strong>doGetBean</strong>方法、依次查询三个缓存是否存在该bean，不存在就将BeanA实例化，然后把BeanA包装成一个ObjectFactory对象保存到三级缓存中。</li><li>BeanA对成员属性BeanB进行依赖注入。</li><li>BeanB执行<strong>doGetBean</strong>方法、依次查询三个缓存是否存在该bean，不存在就将BeanB实例化，然后把BeanB包装成一个ObjectFactory对象保存到三级缓存中。</li><li>BeanB对成员属性BeanA进行依赖注入。</li><li>再次调用<strong>doGetBean</strong>方法创建BeanA实例，查询三个缓存，在三级缓存得到了BeanA的早期引用，将它放到二级缓存并移除三级缓存并返回，B完成属性装配，一个完整的对象放到一级缓存中。</li><li>BeanA同样得到一个BeanB，完成依赖注入并放入一级缓存。</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> spring </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>链式编程</title>
       <link href="/posts/7c194a5.html"/>
       <url>/posts/7c194a5.html</url>
